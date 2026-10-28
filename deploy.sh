@@ -28,8 +28,11 @@ if ! command -v bws &> /dev/null; then
         echo "Installing unzip..."
         sudo apt update && sudo apt install -y unzip
     fi
+    # Install script runs, defaulting to ~/.local/bin in non-interactive shells
     curl -fsSL https://bws.bitwarden.com/install | bash
-    sudo mv bws /usr/local/bin/
+    
+    # Move it from the local directory to the global path systemd expects
+    sudo mv ~/.local/bin/bws /usr/local/bin/bws
 fi
 
 echo "Saving BWS token to .env for systemd..."

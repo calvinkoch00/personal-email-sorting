@@ -1,0 +1,39 @@
+name: Deploy to Oracle VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inject Secrets from Bitwarden
+        uses: bitwarden/sm-action@v2
+        with:
+          access_token: ${{ secrets.ORACLE_MICRO_1_BWS_TOKEN }}
+          secrets: |
+            <HOST_SECRET_ID> > ORACLE_HOST
+            <SSH_KEY_SECRET_ID> > ORACLE_SSH_KEY
+
+      - name: Execute deployment via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          BWS_ACCESS_TOKEN: ${{ secrets.ORACLE_MICRO_1_BWS_TOKEN }}
+        with:
+          host: ${{ env.ORACLE_HOST }}
+          username: ubuntu
+          key: ${{ env.ORACLE_SSH_KEY }}
+          envs: BWS_ACCESS_TOKEN
+          script: |
+            if [ ! -d "~/personal-email-sorting" ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/personal-email-sorting
+            fi
+            
+            cd ~/personal-email-sorting
+            git fetch origin main
+            git reset --hard origin/main
+            chmod +x deploy.sh
+            
+            ./deploy.sh "$BWS_ACCESS_TOKEN"

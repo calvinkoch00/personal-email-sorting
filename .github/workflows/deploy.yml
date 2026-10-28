@@ -1,4 +1,3 @@
-#Test
 name: Deploy to Oracle VM
 
 on:
@@ -15,8 +14,8 @@ jobs:
         with:
           access_token: ${{ secrets.ORACLE_MICRO_1_BWS_TOKEN }}
           secrets: |
-            <HOST_SECRET_ID> > ORACLE_HOST
-            <SSH_KEY_SECRET_ID> > ORACLE_SSH_KEY
+            12d58949-33e5-46cf-a9a8-b4f1010f2baf > ORACLE_HOST
+            75d82131-9093-4f43-bf60-b4f1010f482e > ORACLE_SSH_KEY
 
       - name: Execute deployment via SSH
         uses: appleboy/ssh-action@v1.0.3

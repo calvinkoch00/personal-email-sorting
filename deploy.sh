@@ -12,6 +12,12 @@ git fetch origin main
 git reset --hard origin/main
 
 echo "Updating Python environment..."
+# Check if the virtual environment exists, create it if it doesn't
+if [ ! -d "venv" ]; then
+    echo "Virtual environment not found. Creating one..."
+    python3 -m venv venv
+fi
+
 source venv/bin/activate
 pip install -r requirements.txt
 

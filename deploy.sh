@@ -24,6 +24,10 @@ pip install -r requirements.txt
 echo "Checking for Bitwarden Secrets CLI (bws)..."
 if ! command -v bws &> /dev/null; then
     echo "Installing bws..."
+    if ! command -v unzip &> /dev/null; then
+        echo "Installing unzip..."
+        sudo apt update && sudo apt install -y unzip
+    fi
     curl -fsSL https://bws.bitwarden.com/install | bash
     sudo mv bws /usr/local/bin/
 fi

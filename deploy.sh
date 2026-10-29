@@ -36,7 +36,7 @@ if ! command -v bws &> /dev/null; then
 fi
 
 echo "Saving BWS token to .env for systemd..."
-echo "ORACLE_MICRO_1_BWS_TOKEN=$BWS_TOKEN" > .env
+echo "BWS_ACCESS_TOKEN=$BWS_TOKEN" > .env
 
 echo "Restarting FastAPI background service..."
 sudo systemctl restart email-router.service

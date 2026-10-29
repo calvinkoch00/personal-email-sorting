@@ -105,3 +105,25 @@ async def graph_webhook(request: Request, validationToken: str = Query(None), ba
         logger.error(f"Webhook error: {e}")
         
     return Response(status_code=202)
+
+@app.get("/folders")
+def get_folders():
+    """Fetch all email folders and their IDs from Microsoft Graph."""
+    try:
+        token = get_graph_token()
+        headers = {"Authorization": f"Bearer {token}"}
+        url = f"{GRAPH_URL}/users/{USER_EMAIL}/mailFolders?$top=100"
+        
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            return {"error": "Failed to fetch folders", "details": response.json()}
+            
+        folders = response.json().get("value", [])
+        
+        # Return a clean dictionary mapping folder names to their IDs
+        return {
+            folder["displayName"]: folder["id"] for folder in folders
+        }
+        
+    except Exception as e:
+        return {"error": str(e)}
